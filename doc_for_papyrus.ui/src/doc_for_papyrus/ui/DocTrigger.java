@@ -54,7 +54,7 @@ public class DocTrigger extends AbstractHandler implements Notified {
 			}
 			
 			String cdir = resolvedFileURL.toString();
-			String template = "'" + cdir + "docbook_template.orig.xml'";
+			String template = "'" + cdir + "docbook_template.xml'";
 			String schema = "'http://docbook.org/xml/5.0/xsd/docbook.xsd'";
 			String info = "'" + cdir + "info.xml'";			
 			

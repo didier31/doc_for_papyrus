@@ -34,7 +34,7 @@
       </affiliation>
     </author>
 
-    <?xmlgen end [AUTHOR]
+    <?xmlgen [AUTHOR] end
     ?>
 
     <pubdate/>
@@ -46,15 +46,16 @@
   <chapter>
     <title>Package <?xmlgen package.name?> (from <?xmlgen package.nestingPackage.name ?>)</title>
 
-    <?xmlgen comment : package.ownedComment
+    <?xmlgen [Comments] comment : package.ownedComment
     ?>
 
     <para><?xmlgen comment.body ?></para>
 
-    <?xmlgen end 
+    <?xmlgen [Comments] 
+             end
     ?>
 
-    <?xmlgen [DIAGRAMS_OF_THIS_CHAPTER]
+    <?xmlgen [Diagrams]
              relatedDiagram : notation->select(d | d.styles->at(3).owner = package) 
    ?>
 
@@ -70,34 +71,64 @@
       </mediaobject>
     </figure>
 
-    <?xmlgen end [DIAGRAMS_OF_THIS_CHAPTER]
+    <?xmlgen [Diagrams] 
+             end 
    ?>
 
-    <?xmlgen classifier : package.packagedElement->filter(uml::Classifier)
+    <?xmlgen [Classifiers] classifier : package.packagedElement->filter(uml::Classifier)
     ?>
 
-    <?xmlgen ancestor : classifier.generalization
+    <?xmlgen [Descendants] begin 
+                                 ascendants = classifier.general->closure(classifier : uml::Classifier | classifier.general),
+                                 descendants = ascendants->reverse() 
+   ?>
+
+    <?xmlgen [DirectDescendants] begin 
+    when descendants <> null
+    directDescendants = descendants->first(), descendants = (if descendants->size() > 1 then 
+                                                               descendants->asSequence()->subSequence(2, descendants->size()) 
+                                                            else 
+                                                               Sequence{}
+                                                            endif)
    ?>
 
     <itemizedlist>
-      <listitem>
-        <para><?xmlgem ancestor.name ?></para>
-      </listitem>
+      <?xmlgen [Descendant] descendant : directDescendants ?>
 
       <listitem>
-        <itemizedlist>
-          <listitem>
-            <para><?xmlgem ancestor.name ?></para>
-          </listitem>
-        </itemizedlist>
+        <para><?xmlgen descendant.name ?></para>
       </listitem>
+
+      <?xmlgen [Descendant] end ?>
+
+      <?xmlgen begin when descendants <> null ?>
+
+      <listitem>
+        <?xmlgen end ?>
+
+        <?xmlgen <Insert> ?>
+
+        <?xmlgen [Void] void : Sequence{} ?>
+
+        <para/>
+
+        <?xmlgen [Void] end ?>
+
+        <?xmlgen begin when descendants <> null ?>
+      </listitem>
+
+      <?xmlgen end ?>
+
+      <?xmlgen end ?>
     </itemizedlist>
 
-    <?xmlgen end
+    <?xmlgen [DirectDescendants] end
     ?>
 
+    <?xmlgen [ReversedAncestors] begin ?>
+
     <table>
-      <title><?xmlgen packagedElement.name
+      <title><?xmlgen classifier.name
      ?></title>
 
       <tgroup cols="1">
@@ -119,7 +150,7 @@
       </tgroup>
     </table>
 
-    <?xmlgen end
+    <?xmlgen [Classifiers] end
    ?>
   </chapter>
 </book>
