@@ -83,8 +83,72 @@
                                  descendants = ascendants->reverse() 
    ?>
 
-    <?xmlgen [Descendants] end
+    <?xmlgen [DirectDescendants] begin when descendants <> null
+    directDescendants = descendants->first(), 
+    descendants = (if descendants->size() > 1 then 
+                      descendants->asSequence()->subSequence(2, descendants->size()) 
+                   else 
+                      Sequence{}
+                   endif)
+   ?>
+
+    <itemizedlist>
+      <?xmlgen [Descendant] descendant : directDescendants ?>
+
+      <listitem>
+        <para><?xmlgen descendant.name ?></para>
+      </listitem>
+
+      <?xmlgen [Descendant] end ?>
+
+      <?xmlgen begin when descendants <> null ?>
+
+      <listitem>
+        <?xmlgen end ?>
+
+        <?xmlgen <Insert> ?>
+
+        <?xmlgen [Void] void : Sequence{} ?>
+
+        <para/>
+
+        <?xmlgen [Void] end ?>
+
+        <?xmlgen begin when descendants <> null ?>
+      </listitem>
+
+      <?xmlgen end ?>
+
+      <?xmlgen end ?>
+    </itemizedlist>
+
+    <?xmlgen [DirectDescendants] end
     ?>
+
+    <?xmlgen [ReversedAncestors] begin ?>
+
+    <table>
+      <title><?xmlgen classifier.name
+     ?></title>
+
+      <tgroup cols="1">
+        <thead>
+          <row>
+            <entry align="center"/>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry/>
+          </row>
+
+          <row>
+            <entry/>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
 
     <?xmlgen [Classifiers] end
    ?>
