@@ -40,7 +40,7 @@
     <pubdate/>
   </info>
 
-  <?xmlgen package : uml.nestedPackage->closure(package : ecore::EPackage | package.nestedPackage)
+  <?xmlgen [Packages] package : uml.nestedPackage->closure(package : ecore::EPackage | package.nestedPackage)
    ?>
 
   <chapter>
@@ -101,31 +101,29 @@
 
       <?xmlgen [Descendant] end ?>
 
-      <?xmlgen begin when descendants <> null ?>
+      <?xmlgen [NextDescendantPreamble] begin when descendants <> null ?>
 
       <listitem>
-        <?xmlgen end ?>
+        <?xmlgen [NextDescendantPreamble] end ?>
 
         <?xmlgen <Insert> ?>
 
-        <?xmlgen [Void] void : Sequence{} ?>
+        <?xmlgen [Dummy] begin when false ?>
 
         <para/>
 
-        <?xmlgen [Void] end ?>
+        <?xmlgen [Dummy] end ?>
 
-        <?xmlgen begin when descendants <> null ?>
+        <?xmlgen [WhenNextDescendantEpilogue] begin when descendants <> null ?>
       </listitem>
 
-      <?xmlgen end ?>
-
-      <?xmlgen end ?>
+      <?xmlgen [WhenNextDescendantEpilogue] end ?>
     </itemizedlist>
 
     <?xmlgen [DirectDescendants] end
     ?>
 
-    <?xmlgen [ReversedAncestors] begin ?>
+    <?xmlgen [Descendants] end ?>
 
     <table>
       <title><?xmlgen classifier.name
@@ -153,4 +151,7 @@
     <?xmlgen [Classifiers] end
    ?>
   </chapter>
+
+  <?xmlgen [Packages] end
+     ?>
 </book>
