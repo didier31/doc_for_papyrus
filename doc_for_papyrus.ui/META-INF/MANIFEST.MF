@@ -11,6 +11,7 @@ Import-Package: org.eclipse.core.commands,
  org.eclipse.jface.viewers,
  org.eclipse.ui,
  org.eclipse.ui.handlers,
+ org.eclipse.uml2.uml,
  org.jdom2,
  org.jdom2.input,
  org.jdom2.located,
@@ -22,4 +23,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.papyrus.infra.onefile;bundle-version="2.0.0",
  org.eclipse.emf.ecore,
  org.eclipse.acceleo.query;bundle-version="6.0.1",
- org.eclipse.acceleo.annotations;bundle-version="6.0.1"
+ org.eclipse.acceleo.annotations;bundle-version="6.0.1",
+ org.eclipse.emf.common

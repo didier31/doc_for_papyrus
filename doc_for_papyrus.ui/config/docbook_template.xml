@@ -40,11 +40,11 @@
     <pubdate/>
   </info>
 
-  <?xmlgen [Packages] package : uml.nestedPackage->closure(package : ecore::EPackage | package.nestedPackage)
+  <?xmlgen package : uml->closure(package : ecore::EPackage | package.nestedPackage)
    ?>
 
   <chapter>
-    <title>Package <?xmlgen package.name?> (from <?xmlgen package.nestingPackage.name ?>)</title>
+    <title>Package <?xmlgen package.name?></title>
 
     <?xmlgen [Comments] comment : package.ownedComment
     ?>
@@ -78,80 +78,47 @@
     <?xmlgen [Classifiers] classifier : package.packagedElement->filter(uml::Classifier)
     ?>
 
-    <?xmlgen [Descendants] begin 
-                                 ascendants = classifier.general->closure(classifier : uml::Classifier | classifier.general),
-                                 descendants = ascendants->reverse() 
-   ?>
-
-    <?xmlgen [DirectDescendants] begin 
-    when descendants <> null
-    directDescendants = descendants->first(), descendants = (if descendants->size() > 1 then 
-                                                               descendants->asSequence()->subSequence(2, descendants->size()) 
-                                                            else 
-                                                               Sequence{}
-                                                            endif)
-   ?>
-
-    <itemizedlist>
-      <?xmlgen [Descendant] descendant : directDescendants ?>
-
-      <listitem>
-        <para><?xmlgen descendant.name ?></para>
-      </listitem>
-
-      <?xmlgen [Descendant] end ?>
-
-      <?xmlgen [NextDescendantPreamble] begin when descendants <> null ?>
-
-      <listitem>
-        <?xmlgen [NextDescendantPreamble] end ?>
-
-        <?xmlgen <Insert> ?>
-
-        <?xmlgen [Dummy] begin when false ?>
-
-        <para/>
-
-        <?xmlgen [Dummy] end ?>
-
-        <?xmlgen [WhenNextDescendantEpilogue] begin when descendants <> null ?>
-      </listitem>
-
-      <?xmlgen [WhenNextDescendantEpilogue] end ?>
-    </itemizedlist>
-
-    <?xmlgen [DirectDescendants] end
-    ?>
-
-    <?xmlgen [Descendants] end ?>
-
-    <table>
+    <section>
       <title><?xmlgen classifier.name
-     ?></title>
+      ?></title>
 
-      <tgroup cols="1">
-        <thead>
-          <row>
-            <entry align="center"/>
-          </row>
-        </thead>
+      <para><?xmlgen [Descendants] begin 
+                                   descendants = classifier.ancestors()->reverse()
+   ?> <?xmlgen [DirectDescendants] begin when descendants <> null and not descendants->isEmpty()
+    
+    directDescendants = descendants->first(), 
+    descendants = (if descendants->size() > 1 then 
+                      descendants->asSequence()->subSequence(2, descendants->size()) 
+                   else 
+                      Sequence{}
+                   endif)
+   ?> <itemizedlist>
+          <?xmlgen [Descendant] descendant : directDescendants ?>
 
-        <tbody>
-          <row>
-            <entry/>
-          </row>
+          <listitem>
+            <para><?xmlgen descendant.name ?></para>
+          </listitem>
 
-          <row>
-            <entry/>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+          <?xmlgen [Descendant] end ?>
+
+          <?xmlgen [SubsequentDescendance] begin when not descendants->isEmpty() ?>
+
+          <listitem>
+            <?xmlgen <Insert> [DirectDescendants] ?>
+
+            <?xmlgen [Void] begin when false ?>
+
+            <para/>
+
+            <?xmlgen [Void] end ?>
+          </listitem>
+
+          <?xmlgen [SubsequentDescendance] end ?>
+        </itemizedlist> <?xmlgen [DirectDescendants] end
+       ?> <?xmlgen [Descendants] end ?></para>
+    </section>
 
     <?xmlgen [Classifiers] end
    ?>
   </chapter>
-
-  <?xmlgen [Packages] end
-     ?>
 </book>
